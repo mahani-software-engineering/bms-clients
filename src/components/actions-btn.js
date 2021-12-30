@@ -9,16 +9,16 @@ function ActionsBtn(props) {
     const [showOptions, setShowOptions] = useState(false);
     
     function displayOptions(){
-        //
+        setShowOptions(!showOptions)
     }
     
     return (
-        <div style={{width:"40px", height:"40px", padding:"0", margin:"0"}}>
-            <img src={dotsIconHoriz} width="100%" onClick={setActionOptions.bind(this, !showOptions)} />
+        <div className="relative" style={{width:"40px", height:"40px", padding:"0", margin:"0", float:"right"}}>
+            <img src={dotsIconHoriz} width="100%" onClick={displayOptions} />
             {showOptions?
-            <div id="actionOptions" className="bg-white rounded shadow-md mt-2 absolute mt-12 top-0 right-0 min-w-full z-30 invisible">
+            <div id="actionOptions" className="bg-white rounded shadow-md mt-2 absolute mt-12 top-0 right-0 max-w-40 z-50" style={{background:"white", border:"1px solid lenen"}}>
                 <ul className="list-reset">
-                    {actionOptions.map((acn, k) => <Action name={acn} key={k} setShowOptions={setShowOptions} endpoint={props.endpoint} epcase={props.epcase?props.epcase:""} vwcase={props.vwcase} updateActiveDisplay={props.updateActiveDisplay}/>)}      
+                    {actionOptions.map((acn, k) => <Action name={acn} key={k} setShowOptions={setShowOptions} endpoint={props.endpoint} itemid={props.itemid} epcase={props.epcase?props.epcase:""} vwcase={props.vwcase} updateActiveDisplay={props.updateActiveDisplay}/>)}      
                 </ul>
             </div>
             :null}

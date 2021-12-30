@@ -39,10 +39,12 @@ function FormInputField(props) {
                 return;
             }
         }
-        val = val.trim();
-        if ((props.type === "number") || (props.type.endsWith("id"))){
-            val = Number(val);
-        }
+        
+        //sanitize val appropriately
+        val = val && ((typeof val)==="string")? val.trim() : val;
+        val = ((props.type === "number") || (props.type.endsWith("id")))? Number(val) : val;
+        val = (val==="Yes")? true : (val==="No")? false: val;
+        //end sanitizing
         
         let pathLevels = [];
 
@@ -383,7 +385,7 @@ function FormInputField(props) {
                       <label className="block text-sm text-gray-600" htmlFor={props.name+props.key}>{props.label}</label>
                       <input ref={inputFieldRef} type="text" datalist="searchableOptions" id={props.name+props.key} className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
                       <datalist id="searchableOptions">
-                        {selectOptions.map((option, index)=> <option key={index} value={(props.type.endWith(",id"))?index:option}> {option} </option>)}
+                        {selectOptions.map((option, index)=> <option key={index} value={(props.type.endsWith(",id"))?index:option}> {option} </option>)}
                       </datalist>
                   </div>
               :(Array.isArray(selectOptions) && (selectOptions.length>0) && (typeof selectOptions[0] === "object"))?
@@ -391,7 +393,7 @@ function FormInputField(props) {
                       <label className="block text-sm text-gray-600" htmlFor={props.name+props.key}>{props.label}</label>
                       <input ref={inputFieldRef} type="text" datalist="searchableOptions" id={props.name+props.key} className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
                       <datalist id="searchableOptions">
-                        {selectOptions.map((option, index)=> <option key={index} value={(props.type.endWith(",id"))?option.id:option.value}> {option.value} </option>)}
+                        {selectOptions.map((option, index)=> <option key={index} value={(props.type.endsWith(",id"))?option.id:option.value}> {option.value} </option>)}
                       </datalist>
                   </div>
                :null

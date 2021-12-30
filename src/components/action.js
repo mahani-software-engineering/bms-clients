@@ -8,13 +8,17 @@ function Action(props) {
     function applyAction(){
         switch (props.name) {
             case "view":
-                props.updateActiveDisplay(<ViewAction endpoint={props.endpoint} vwcase={props.vwcase} updateActiveDisplay={props.updateActiveDisplay}/>);
+                if(props.vwcase==="single" && props.itemid){
+                  props.updateActiveDisplay(<ViewAction endpoint={props.endpoint} itemid={props.itemid} vwcase={props.vwcase} updateActiveDisplay={props.updateActiveDisplay}/>);
+                }else{
+                  props.updateActiveDisplay(<ViewAction endpoint={props.endpoint} vwcase={props.vwcase} updateActiveDisplay={props.updateActiveDisplay}/>);
+                }
                 break;
             case "edit":
-                props.updateActiveDisplay(<EditAction endpoint={props.endpoint} epcase={props.epcase} updateActiveDisplay={props.updateActiveDisplay}/>);
+                //props.updateActiveDisplay(<EditAction endpoint={props.endpoint} epcase={props.epcase} updateActiveDisplay={props.updateActiveDisplay}/>);
                 break;
             case "delete":
-                props.updateActiveDisplay(<DeleteAction endpoint={props.endpoint} epcase={props.epcase} updateActiveDisplay={props.updateActiveDisplay}/>);  
+                //props.updateActiveDisplay(<DeleteAction endpoint={props.endpoint} epcase={props.epcase} updateActiveDisplay={props.updateActiveDisplay}/>);  
                 break;
             default:
                 //do nothing

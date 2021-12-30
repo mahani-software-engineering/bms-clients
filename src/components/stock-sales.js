@@ -69,6 +69,7 @@ function StockSales() {
                                 <th className="text-left text-blue-900">Opening stock</th>
                                 <th className="text-left text-blue-900">Added</th>
                                 <th className="text-left text-blue-900">Sold</th>
+                                <th className="text-left text-blue-900">Rate</th>
                                 <th className="text-left text-blue-900">Closing stock</th>
                                 <th className="text-left text-blue-900">Revenue</th>
                             </tr>
@@ -89,6 +90,7 @@ function StockSales() {
                                     <td> {v.openingstock} {v.units} </td>
                                     <td> {v.newstock} </td>
                                     <td> {v.sales} </td>
+                                    <td> {v.rate} </td>
                                     <td> {(v.openingstock+v.newstock)-v.sales} </td>
                                     <td> {v.revenue} /=</td>
                                 </tr>)

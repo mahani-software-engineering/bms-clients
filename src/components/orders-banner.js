@@ -28,7 +28,7 @@ function OrdersBanner(props) {
             console.log("response.status === 200 : ",response.status === 200);
             if (response.status === 200) {
                 console.log("response.status === 200 passed");
-                if (response.data.Data){
+                if (!isNaN(response.data.Data)){
                     setOrdersCount(response.data.Data);
                     setResponseStatus(response.status);
                 }

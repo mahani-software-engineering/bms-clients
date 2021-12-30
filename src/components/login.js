@@ -80,3 +80,43 @@ const Login = (props) => {
 };
 
 export default Login;
+
+
+/*TODO:
+Method 1:
+----------
+When the user first logs in successfully create a 'sessionStorage' instance to indicate that there is an active session:
+
+window.sessionStorage.setItem(sessionKey, stringifiedUserToken);
+If the page gets refreshed then check for this session item and re-register the active session:
+
+const activeSession = window.sessionStorage.getItem(sessionKey);
+if (activeSession) {
+  // fire register user session action
+}
+If the user logs out then kill the session storage token.
+
+All the server interaction still requires the cookie which will be passed along, so this is purely a front-end concern.
+
+Session storage will clear at the end of the browser session, so this naive approach may not work for "permanent" sessions. 
+It does have great browser support though: http://caniuse.com/#search=sessionStorage
+
+Method 2:
+---------
+Session storage is a "native" feature of browsers. You simply access it via the window. attachment. :) 
+Yep, local storage and session storage to my knowledge essentially work the same way, 
+except that session storage is flushed between browser sessions. I had to go for session storage as there was 
+no way for me to know if a user session stored in local session is actually still active if the user closed and 
+reopened their browser. This is because I couldn't access cookies to verify. 
+With my session storage I had login/logout hooks so I felt safe there
+
+*/
+
+
+
+
+
+
+
+
+

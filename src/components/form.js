@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { BACKEND_URL, API, FORM_FORMATS } from "./globals";
+import { BACKEND_URL, FORM_FORMATS } from "./globals";
 import DashboardDisplay from './dashboard-display';
 import FormStepContent from './form-step-content';
 
@@ -30,7 +30,7 @@ const Form = (props) => {
         }
     }
     
-    let formEndpoint = props.endpoint.replace("/","");
+    let formEndpoint = props.endpoint.trim().startsWith("/")? props.endpoint.split("/")[1].trim() : props.endpoint.trim();
     
     function arrangeFormSteps(){
         let currentPath = "root";
@@ -126,7 +126,8 @@ const Form = (props) => {
             readUserInput();
         });
         //use axios to post requestData
-        let backendd = `${API[formEndpoint].path}${((typeof props.epcase) === "string")?"/${props.epcase}":""}`;
+        let multiCaseServerEndpoints = ["createPayment"];
+        let backendd = `${FORM_FORMATS[formEndpoint].url}${multiCaseServerEndpoints.includes(props.endpoint.trim())?"/"+props.epcase:""}`;
         console.log("||||||backendd=",backendd," |||||data=",requestData.current);
         let requestBodyJson = requestData.current;
         requestBodyJson.customerid = props.customerid;
@@ -134,7 +135,7 @@ const Form = (props) => {
         let requestBody = JSON.stringify(requestBodyJson);
         axios({
             url: backendd,
-            method: "POST",
+            method: FORM_FORMATS[formEndpoint].method,
             data: requestBody
         }).then(function(response) {
             setLoading(false);
@@ -193,9 +194,9 @@ const Form = (props) => {
                             {/*genereate formStep content instances*/
                              formStep.type === "children"?
                              formStepContentInstances.filter(stepid=>(stepid===ky)).map((v,k)=> 
-                              <FormStepContent key={ky+""+k}  stepId={ky} instanceId={k} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={API[formEndpoint].path}/>    
+                              <FormStepContent key={ky+""+k}  stepId={ky} instanceId={k} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={FORM_FORMATS[formEndpoint].url}/>    
                              )
-                             :<FormStepContent key={ky} stepId={ky} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={API[formEndpoint].path}/>    
+                             :<FormStepContent key={ky} stepId={ky} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={FORM_FORMATS[formEndpoint].url}/>    
                             }
                             {formStep.type === "children"?
                               <button type="button" onClick={addStepContentInstance.bind(this, ky)} style={{background:"linen", border:"0", margin:"2px 0 2px 0", padding:"0", width:"100%"}} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
