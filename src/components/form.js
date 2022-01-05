@@ -110,7 +110,7 @@ const Form = (props) => {
     let lastStep = numberOfSteps-1;
     useEffect(() => {
         arrangeFormSteps();
-        setCurrentStep(lastStep);
+        //setCurrentStep(lastStep);
     },[]);
     //==============
     
@@ -121,6 +121,8 @@ const Form = (props) => {
     
     const submitForm = (e) => {
         e.preventDefault();
+        let userAccessRights = localStorage.getItem('userAccessRights');
+        let currentUserId = localStorage.getItem('currentUserId');
         //call all registered field readers
         inputReaders.current.forEach(readUserInput => {
             readUserInput();
@@ -131,7 +133,8 @@ const Form = (props) => {
         console.log("||||||backendd=",backendd," |||||data=",requestData.current);
         let requestBodyJson = requestData.current;
         requestBodyJson.customerid = props.customerid;
-        requestBodyJson.createdby = props.createdby ? props.createdby : 1;
+        requestBodyJson.createdby = Number(currentUserId);
+        console.log("=requestBodyJson.createdby before submit = ", requestBodyJson.createdby);
         let requestBody = JSON.stringify(requestBodyJson);
         axios({
             url: backendd,
@@ -180,41 +183,51 @@ const Form = (props) => {
     return (
         <>
             <div className="flex flex-col w-full text-center">
-              <div className="py-6 bg-white sm:py-8 lg:py-12">
-                <div className="px-4 mx-auto max-w-screen-2xl md:px-8">
-                   
-                   <form className="max-w-screen-md mx-auto" onSubmit={submitForm}>
+              <div className="py-6 bg-white sm:py-8 lg:py-2">
+                <div className="px-4 mx-auto max-w-screen-2xl md:px-8" style={{ border:"1px solid maroon", paddingBottom:"3px"}}>
+                   <table width="100%">
+                     <thead >
+                        <tr> 
+                         {activeFormCase.map((step, ke) => 
+                            <td> 
+                                <div style={{borderBottom:(currentStep===ke)?"3px solid green":"0"}} onClick={setCurrentStep.bind(this, ke)}>
+                                    <h5 className="font-bold text-black"> {step.label} </h5>
+                                </div> 
+                            </td>
+                         )}
+                        </tr>
+                     </thead>
+                   </table>
+                   <div>
                      {
                        activeFormCase.map((formStep, ky) =>
-                       <div className="w-full xl:w-1/3 p-6 xl:max-w-4xl border-l-1 border-gray-300">
-                          <div className="max-w-sm lg:max-w-3xl xl:max-w-5xl">
-                            <div className="border-b p-3">
-                                <h5 className="font-bold text-black"> {formStep.label} </h5>
+                         <div className="w-full xl:w-1/3 p-6 xl:max-w-4xl border-l-1 border-gray-300" 
+                         style={{display:(currentStep===ky)?"block":"none"}}>
+                            <div className="max-w-sm lg:max-w-3xl xl:max-w-5xl">
+                              {/*genereate formStep content instances*/
+                               formStep.type === "children"?
+                               formStepContentInstances.filter(stepid=>(stepid===ky)).map((v,k)=> 
+                                <FormStepContent key={ky+""+k}  stepId={ky} instanceId={k} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={FORM_FORMATS[formEndpoint].url}/>    
+                               )
+                               :<FormStepContent key={ky} stepId={ky} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={FORM_FORMATS[formEndpoint].url}/>    
+                              }
+                              {formStep.type === "children"?
+                                <button type="button" onClick={addStepContentInstance.bind(this, ky)} style={{background:"linen", border:"0", margin:"2px 0 2px 0", padding:"0", width:"100%"}} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                  + add {formStep.name}
+                                </button>
+                               :null
+                              }
                             </div>
-                            {/*genereate formStep content instances*/
-                             formStep.type === "children"?
-                             formStepContentInstances.filter(stepid=>(stepid===ky)).map((v,k)=> 
-                              <FormStepContent key={ky+""+k}  stepId={ky} instanceId={k} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={FORM_FORMATS[formEndpoint].url}/>    
-                             )
-                             :<FormStepContent key={ky} stepId={ky} formStep={formStep} registerInputReader={registerInputReader} requestData={requestData} backend={FORM_FORMATS[formEndpoint].url}/>    
-                            }
-                            {formStep.type === "children"?
-                              <button type="button" onClick={addStepContentInstance.bind(this, ky)} style={{background:"linen", border:"0", margin:"2px 0 2px 0", padding:"0", width:"100%"}} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                                + add {formStep.name}
-                              </button>
-                             :null
-                            }
                           </div>
-                        </div>
                        )
                      }
                      {/*==============form footer======*/}
                      <div className="flex items-center justify-between" style={{margin: "30px 0 0 0"}}>
-                        {(currentStep<=0)?
+                        {(currentStep > 0)?
                         <button type="button" className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-100" onClick={btnSetActiveStep.bind(this,"back")} style={{background:"lightgray", color:"black"}}>    
                            Back
                         </button>
-                        :<button type="button" className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed" style={{background:"lightgray"}}>    
+                        :<button type="button" className="bg-blue-500 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed" style={{background:"linen", border:"1px solid lightgray"}}>    
                            Back
                         </button>
                         }
@@ -230,7 +243,7 @@ const Form = (props) => {
                         }
                      </div>
                      {/*==============/form footer======*/}
-                   </form>
+                   </div>
                 </div>
               </div>
             </div>

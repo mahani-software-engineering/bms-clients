@@ -30,7 +30,7 @@ function PaymentCaseSelector(props) {
     const checkCustomerExistance = () => {
         let phoneOrEmail = phoneInputRef.current.value;
         axios({
-            url: `/user/read/${phoneOrEmail}`,
+            url: `/user/${phoneOrEmail}`,
             method: "get"
         }).then(function(response) {
             console.log("response.data=", response.data);
@@ -49,7 +49,10 @@ function PaymentCaseSelector(props) {
                 setErrorFromBackend(response.data.Message);
                 setResponseStatus(response.status);
             }
-        },(er)=>{ console.log(er); });
+        },(er) => {
+            console.log("er-response = ", JSON.stringify(er));
+            console.log(er);
+        });
     };
     
     function doIdentifyFormCase(){

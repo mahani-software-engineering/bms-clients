@@ -31,15 +31,20 @@ function ViewAction(props) {
         bill:["updatedat","deletedat"],
         stock:["updatedat","deletedat"],
         activity:["updatedat","deletedat"],
-        message:["updatedat","deletedat"],
+        message:["updatedat","deletedat", "userid","read"],
         notification:["updatedat","deletedat"],
-        user:["updatedat","deletedat"],
+        user:["updatedat","deletedat","pxwd"],
         customer:["updatedat","deletedat"],
         guest:["updatedat","deletedat"]
     };
     
     useEffect(() => {
         let backend = `${props.endpoint}${props.itemid?"/"+props.itemid:""}`;
+        if(props.vwcase==="list" && props.endpoint==="/message"){
+            //get the ID of current user
+            let currentUserId = localStorage.getItem('currentUserId') || props.currentUserId;
+            backend = `/messages/${currentUserId}`;
+        }
         console.log("view-action backend = ", backend);
         axios({
             url: backend,

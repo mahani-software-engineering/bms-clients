@@ -4,7 +4,7 @@ import logo from './images/cropped-victoria-forest-logo.png';
 function Footer(props) {
     
     return (
-        <footer className="bg-white border-t border-gray-400 shadow">
+        <footer className="bg-white border-t border-gray-400 shadow" style={{background:"radial-gradient(white, rgb(190, 127, 137))"}}>
             <div className="container max-w-md mx-auto flex py-8">
 
                 <div className="w-full mx-auto flex flex-wrap">

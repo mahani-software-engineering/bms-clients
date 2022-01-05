@@ -13,16 +13,33 @@ import Footer from './footer';
 
 const Dashboard = () => {
     const [activeDisplay, setActiveDisplay] = useState(<></>);
+    const [userId, setUserId] = useState("");
+    const [userSignedIn, setUserSignedIn] = useState(false);
     
     useEffect(() => {
         //setActiveDisplay(<DashboardDisplay updateActiveDisplay={setActiveDisplay}/>);
-        setActiveDisplay(<Login updateActiveDisplay={setActiveDisplay}/>);
-    },[]);
+        if(userId === ""){
+            let currentUserId = localStorage.getItem('currentUserId');
+            setUserId(currentUserId);
+            let userAccessRights = localStorage.getItem('userAccessRights');
+            console.log("Dashboord: currentUserId=",currentUserId);
+            console.log("Dashboord: userAccessRights=",userAccessRights);
+            if(currentUserId === "" || currentUserId === null || (!currentUserId) || userAccessRights===null){
+               setActiveDisplay(<Login updateActiveDisplay={setActiveDisplay} setUserId={setUserId}/>);
+            }else{
+               setUserSignedIn(true);
+               setActiveDisplay(<DashboardDisplay updateActiveDisplay={setActiveDisplay}/>);
+            }
+        }else{
+            setUserSignedIn(true);
+        }
+    },[userId]);
     
     return (
      <>
-        <Header updateActiveDisplay={setActiveDisplay}/>
-
+        {userSignedIn &&
+        <Header updateActiveDisplay={setActiveDisplay} currentUserId={userId} /> 
+        }
         <div className="container w-full mx-auto pt-20">
           <Display updateActiveDisplay={setActiveDisplay}>
              {activeDisplay}
@@ -35,3 +52,6 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
+

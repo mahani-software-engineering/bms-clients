@@ -21,7 +21,9 @@ function FormInputField(props) {
     function handleChangeOfSelectedItemType(ev){
         let val = ev.target.value;
         setSelectedItemType(val);
+        if(!props.type.includes(",only")){
         props.setItemsFilter(val);
+        }
         setInputFieldValue(ev);
     }
     
@@ -364,10 +366,16 @@ function FormInputField(props) {
         <>
         {props.type==="number"?
             <div className="mt-2">
-              <label className="block text-sm text-gray-600" htmlFor="version">{props.label}</label>
               {((props.dl !== "none") && (!isNaN(props.dl)))?
-               <input ref={inputFieldRef} type="number" value={props.dl} className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
-              :<input ref={inputFieldRef} type="number" className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
+              <>
+               <label className="block text-sm text-gray-600" htmlFor="version" style={{display:"none"}}>{props.label}</label>
+               <input ref={inputFieldRef} type="number" value={props.dl} style={{display:"none"}} className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
+              </>
+              :
+              <>
+              <label className="block text-sm text-gray-600" htmlFor="version">{props.label}</label>
+              <input ref={inputFieldRef} type="number" className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
+              </>
               }        
             </div>
         :((typeof props.type==="string") && (props.type.startsWith("text")))?
@@ -426,6 +434,11 @@ function FormInputField(props) {
                   :null
                  }
             </div>
+        :(props.type==="message")?
+         <div class="mb-3 xl:w-96">
+            <label htmlFor={props.name+props.key} className="form-label inline-block mb-2 text-gray-700">{props.label}</label>
+            <textarea ref={inputFieldRef} id={props.name+props.key} className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" rows="3"></textarea>
+         </div>
         :null
         }
       </>

@@ -24,24 +24,20 @@ const Login = (props) => {
             data: {username, pxwd: password}
         }).then(function(response) {
             console.log("Login : response.data.Data=",response.data.Data);
-            if(response.status === 200){
-                setResponseStatus(response.status);
-                goHome(response.data.Data);
-            }else{
-                setErrorFromServer(response.data.Message);
-                setResponseStatus(response.status);
-                alert(response.data.Message);
-            }
+            setResponseStatus(response.status);
+            props.setUserId(response.data.Data.ID);
+            localStorage.setItem("currentUserId", response.data.Data.ID);
+            localStorage.setItem("userAccessRights", response.data.Data.accessRights);
+            goHome(response.data.Data);
          }, (error) => {
-            console.log(error);
-            setErrorFromServer("Server error");
-            alert("Server error");
+            console.log("response = ", JSON.stringify(error));
+            alert("Access denied");
          });
     };
     
     return (
         <div className='h-screen flex bg-gray-bg1'>
-            <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-16'>
+            <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-2 px-16'>
                 <h1 className='text-2xl font-medium text-primary mt-4 mb-12 text-center'>
                     Log in to your account 
                 </h1>
